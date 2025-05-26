@@ -1,0 +1,90 @@
+{
+
+  "main": {
+    "prefix": "main",
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "using ll = long long;",
+      "",
+      "",
+      "int main() {",
+      "    ${0}",
+      "",
+      "    return 0;",
+      "}"
+    ],
+    "description": "main function"
+  },
+
+  "for": {
+    "prefix": "for",
+    "body": [
+      "for (int ${1} = 0; $1 < (int)${2}; $1++) {${0}}"
+    ],
+    "description": "for loop"
+  },
+
+  "if": {
+    "prefix": "if",
+    "body": [
+      "if (${1}) {${2}}"
+    ],
+    "description": "if statement"
+  },
+
+  "vec": {
+    "prefix": "ve",
+    "body": [
+      "vector<${1}> ${2}"
+    ],
+    "description": "vec"
+  },
+
+  "vecin": {
+    "prefix": "vin",
+    "body": [
+      "vector<${1}> ${2}(${3});",
+      "for (auto e: $2) cin >> e;",
+      "$0"
+    ],
+    "description": "vec"
+  },
+
+  "while": {
+    "prefix": "whi",
+    "body": [
+      "while ($1) {$2}"
+    ],
+    "description": "while statement"
+  },
+
+  "in": {
+    "prefix": "in",
+    "body": [
+        "${1:int} ${2}; cin >> $2;",
+        "${0}"
+    ],
+    "description": "input variable"
+  },
+
+  "out": {
+    "prefix": "ou",
+    "body": [
+        "cout << $1 << endl;",
+        "${0}"
+    ],
+    "description": "output variable"
+  },
+
+  "pair": {
+    "prefix": "pa",
+    "body": [
+        "pair<${1}, ${2}> ${3};",
+        "${0}"
+    ],
+    "description": "input variable"
+  }
+
+}
+
