@@ -49,6 +49,7 @@ call plug#begin()
 
         Plug 'hrsh7th/vim-vsnip'       " For snippets
         Plug 'hrsh7th/vim-vsnip-integ'
+        Plug 'hrsh7th/cmp-vsnip'
 
         Plug 'andrewradev/switch.vim'  " For Lean switch support
         Plug 'tomtom/tcomment_vim'     " For commenting motions
@@ -193,10 +194,13 @@ require('lspconfig').clangd.setup{
     end
 }
 
--- cmp setting begin
+-- CMP SETTING BEGIN
 local cmp = require'cmp'
 
 cmp.setup({
+  completion = {
+      autocomplete = false,
+  },
   snippet = {
     expand = function(args)
       vim.fn["vsnip#anonymous"](args.body)
@@ -209,21 +213,47 @@ cmp.setup({
     ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
 
-    ['<C-p>'] = function(fallback)
+ ['<C-p>'] = function()
       if cmp.visible() then
         cmp.select_prev_item()
       else
-        fallback()
+        cmp.complete()
       end
     end,
+
+    ['<TAB>'] = function()
+      if vim.fn['vsnip#expandable']() == 1 then
+          vim.fn['vsnip#expand']()
+      elseif vim.fn['vsnip#jumpable'](1) == 1 then
+        vim.api.nvim_feedkeys(
+          vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-next)", true, false, true),
+          "",
+          false
+        )
+      elseif cmp.visible() then
+        cmp.select_next_item()
+      else
+        cmp.complete()
+      end
+    end,
+
+    -- ['<C-p>'] = function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_prev_item()
+    --   else
+    --       cmp.complete()
+    --   end
+    -- end,
+
 
     ['<C-n>'] = function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       else
-        fallback()
+          cmp.complete()
       end
     end,
+
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
@@ -251,6 +281,7 @@ require("cmp_git").setup()
 ]]
 
 -- Command-line completion
+
 cmp.setup.cmdline({ '/', '?' }, {
   mapping = cmp.mapping.preset.cmdline(),
   sources = {
@@ -258,15 +289,15 @@ cmp.setup.cmdline({ '/', '?' }, {
   }
 })
 
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' }
-  }, {
-    { name = 'cmdline' }
-  }),
-  matching = { disallow_symbol_nonprefix_matching = false }
-})
+-- cmp.setup.cmdline(':', {
+--   mapping = cmp.mapping.preset.cmdline(),
+--   sources = cmp.config.sources({
+--     { name = 'path' }
+--   }, {
+--     -- { name = 'cmdline' }
+--   }),
+--   matching = { disallow_symbol_nonprefix_matching = false }
+-- })
 
 -- LSP config
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -280,6 +311,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 --     capabilities = capabilities,
 --   }
 -- end
--- cmp setting end
+
+-- CMP SETTING END
 
 END
