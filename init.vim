@@ -221,7 +221,7 @@ cmp.setup({
       end
     end,
 
-    ['<TAB>'] = function()
+    ['<TAB>'] = function(fallback)
       if vim.fn['vsnip#expandable']() == 1 then
           vim.fn['vsnip#expand']()
       elseif vim.fn['vsnip#jumpable'](1) == 1 then
@@ -233,7 +233,15 @@ cmp.setup({
       elseif cmp.visible() then
         cmp.select_next_item()
       else
-        cmp.complete()
+          local col = vim.fn.col('.') - 1
+          local line = vim.fn.getline('.')
+
+          if col > 0 and line:sub(col, col):match('%S') then
+            cmp.complete()
+          else
+            fallback()
+          end
+
       end
     end,
 

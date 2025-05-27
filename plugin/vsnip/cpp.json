@@ -69,12 +69,21 @@
   },
 
   "out": {
-    "prefix": "ou",
+
     "body": [
         "cout << $1 << endl;",
         "${0}"
     ],
     "description": "output variable"
+  },
+
+  "return": {
+    "prefix": "ret",
+    "body": [
+        "return ${1};",
+        "${0}"
+    ],
+    "description": "return value"
   },
 
   "pair": {
