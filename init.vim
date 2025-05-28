@@ -1,4 +1,10 @@
 " sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+" Error detected while processing /jugyou/ise/23D8101003K/.config/nvim/init.vim:
+" line  325:
+" E5108: Error executing lua [string ":lua"]:45: attempt to call field 'setup_handlers' (a nil value)
+" stack traceback:
+"         [string ":lua"]:45: in main chunk
+
 
 call plug#begin()
         Plug 'easymotion/vim-easymotion'
