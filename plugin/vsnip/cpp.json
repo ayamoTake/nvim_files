@@ -34,19 +34,9 @@
   },
 
   "vec": {
-    "prefix": "ve",
+    "prefix": "vec",
     "body": [
       "vector<${1}> ${2}"
-    ],
-    "description": "vec"
-  },
-
-  "vecin": {
-    "prefix": "vin",
-    "body": [
-      "vector<${1}> ${2}(${3});",
-      "for (auto e: $2) cin >> e;",
-      "$0"
     ],
     "description": "vec"
   },
