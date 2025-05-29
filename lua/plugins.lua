@@ -1,6 +1,12 @@
 return {
   -- 移動系
-  { "easymotion/vim-easymotion" },
+  { 
+      "easymotion/vim-easymotion",
+      config = function()
+        vim.keymap.set('', 'ff', '<Plug>(easymotion-overwin-w)')
+        vim.keymap.set('n', '<Leader>', '<Plug>(easymotion-prefix)')
+      end,
+  },
 
   -- カラースキーム
   { "Mofiqul/vscode.nvim" },

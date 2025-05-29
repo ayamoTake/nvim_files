@@ -1,4 +1,3 @@
-vim.g.maplocalleader = ' '
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -11,11 +10,27 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
-require("lazy").setup("plugins")
 
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
+require("lazy").setup(
+    "plugins"
+)
 
 vim.cmd([[
 
+let s:plugs=get(s:,'plugs',get(g:,'plugs',{}))
+function! FindPlugin(name) abort
+        return has_key(s:plugs,a:name) ? isdirectory(s:plugs[a:name].dir ):0
+endfunction
+
+command! -nargs=1 UsePlugin if !FindPlugin(<args>) | finish | endif
+
+let g:config_nvim_vim_dir = expand('~/.config/nvim/vim')
+for file in split(globpath(g:config_nvim_vim_dir, '*.vim'), "\n")
+        execute 'source' . file
+endfor
 lua require("toggleterm").setup()
 nnoremap <silent><leader>t <Cmd>exe v:count1 . "ToggleTerm"<CR>
 " nnoremap <silent><leader>t <Cmd>lua require("toggleterm.terminal").Terminal:new():toggle()<CR>
