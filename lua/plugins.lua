@@ -78,12 +78,12 @@ return {
       "lukas-reineke/indent-blankline.nvim",
       config = function()
             local highlight = {
-                "RainbowYellow",
                 "RainbowBlue",
-                "RainbowOrange",
+                "RainbowYellow",
                 "RainbowGreen",
                 "RainbowViolet",
                 "RainbowCyan",
+                "RainbowOrange",
             }
 
             local hooks = require "ibl.hooks"
