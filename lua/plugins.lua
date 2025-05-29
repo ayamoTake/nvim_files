@@ -118,6 +118,27 @@ return {
       end,
   },
 
+  {
+      "kassio/neoterm",
+      config = function()
+        vim.g.neoterm_default_mod = 'botright'
+        -- c++ compile short cut.
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "cpp",
+            callback = function()
+                vim.keymap.set('n', '<Leader>u', function()
+                    local filename = vim.fn.expand("%:p")
+                    local cmd = string.format("g++ '%s' -o '%s' && echo Successed compiling '%s'", filename, "a.out", "a.out")
+                    vim.cmd("T " .. cmd)
+                    vim.cmd("wincmd j")
+                    vim.cmd("startinsert")
+                    vim.api.nvim_feedkeys("./a.out ", "i", false)
+                end)
+            end
+        })
+      end
+  },
+
   -- ターミナルのウィンドウ整理
   {
       "willothy/flatten.nvim",
@@ -160,6 +181,14 @@ return {
       "Julian/lean.nvim",
       dependencies = { "nvim-lua/plenary.nvim" },
       ft = "lean",
+      config = function()
+        require('lean').setup({
+            mappings = true,
+            lsp = {
+                editDelay=10,
+            },
+        })
+      end
   },
 
   -- Lean スイッチ切替

@@ -13,6 +13,7 @@
   "lexima.vim": { "branch": "master", "commit": "ab621e4756465c9d354fce88cff2bd1aa7887065" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "faeb361507aa1ef1b0e5645781e2aa0d36a4aa84" },
   "mason.nvim": { "branch": "main", "commit": "8024d64e1330b86044fed4c8494ef3dcd483a67c" },
+  "neoterm": { "branch": "master", "commit": "eca22dc90a9db5e52d8baf91f31991ad540ffe36" },
   "nvim-cmp": { "branch": "main", "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9" },
   "nvim-lspconfig": { "branch": "master", "commit": "b8e7957bde4cbb3cb25a13a62548f7c273b026e9" },
   "nvim-silicon": { "branch": "main", "commit": "7f66bda8f60c97a5bf4b37e5b8acb0e829ae3c32" },

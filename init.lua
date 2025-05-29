@@ -89,3 +89,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
   end,
 })
+
+-- vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:belowright split term://g++ % -o %:r && ./%:r<CR>', { noremap = true, silent = true })
+
