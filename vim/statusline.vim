@@ -11,17 +11,7 @@ endif
 " ファイル種別
 set statusline+=\ %y
 
-" if FindPlugin('catium.vim')
-" 	" git のbranch
-" 	set statusline+=\ %{fugitive#statusline()}
-" endif
-
 set statusline+=%=
-
-if FindPlugin('catium.vim')
-	" インジケーター
-	set statusline+=%{g:Catium()}
-endif
 
 " 現在行 / 全体行
 set statusline+=[%l/%L]

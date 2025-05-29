@@ -75,19 +75,19 @@ vnoremap m :w !wc -m<CR>
 nnoremap <leader><leader>t :tabnew \| term<CR>
 
 " vim-vsnip
-" Insertモード中に <Tab> を押したときの動作を定義
-imap <expr> <Tab> vsnip#expandable()      ? '<Plug>(vsnip-expand)'         :
-                 \ vsnip#jumpable(1)      ? '<Plug>(vsnip-jump-next)'      :
-                 \                        '<Tab>'
-
-" Selectモードでも同様に
-smap <expr> <Tab> vsnip#expandable()      ? '<Plug>(vsnip-expand)'         :
-                 \ vsnip#jumpable(1)      ? '<Plug>(vsnip-jump-next)'      :
-                 \                        '<Tab>'
-
-" Shift-Tab で前のタブストップに戻る（これはそのままでOK）
-imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'
-smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'
+" " Insertモード中に <Tab> を押したときの動作を定義
+" imap <expr> <Tab> vsnip#expandable()      ? '<Plug>(vsnip-expand)'         :
+"                  \ vsnip#jumpable(1)      ? '<Plug>(vsnip-jump-next)'      :
+"                  \                        '<Tab>'
+"
+" " Selectモードでも同様に
+" smap <expr> <Tab> vsnip#expandable()      ? '<Plug>(vsnip-expand)'         :
+"                  \ vsnip#jumpable(1)      ? '<Plug>(vsnip-jump-next)'      :
+"                  \                        '<Tab>'
+"
+" " Shift-Tab で前のタブストップに戻る（これはそのままでOK）
+" imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'
+" smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)' : '<S-Tab>'
 
 
 command! Q q!

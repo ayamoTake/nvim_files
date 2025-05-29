@@ -1,3 +1,6 @@
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -10,16 +13,6 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
-
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
-require("lazy").setup({
-    defaults = { lazy = false, },
-    spec = {
-        { import = "plugins" },
-    },
-})
 
 vim.cmd([[
 
@@ -42,6 +35,13 @@ autocmd FocusGained * set mouse=nvi
 autocmd FocusLost * set mouse=
 
 ]])
+
+require("lazy").setup({
+    defaults = { lazy = false, },
+    spec = {
+        { import = "plugins" },
+    },
+})
 
 
 if vim.fn.has("wsl") == 1 then
@@ -85,13 +85,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { buffer = true })
     set("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { buffer = true })
     set("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { buffer = true })
-    set("n", "<space>e", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", { buffer = true })
     set("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", { buffer = true })
 
   end,
 })
-
--- CMP SETTING BEGIN
-
--- CMP SETTING END
-

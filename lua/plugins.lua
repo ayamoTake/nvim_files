@@ -20,7 +20,58 @@ return {
   { "numToStr/Comment.nvim", lazy = false }, -- 起動時読み込みでもOK
 
   -- ツリー表示
-  { "nvim-tree/nvim-tree.lua", dependencies = { "nvim-tree/nvim-web-devicons" } },
+  { 
+      "nvim-tree/nvim-tree.lua",
+      dependencies = { "nvim-tree/nvim-web-devicons" },
+      config = function()
+        vim.g.loaded_netrw = 1
+        vim.g.loaded_netrwPlugin = 1
+
+        -- optionally enable 24-bit colour
+        vim.opt.termguicolors = true
+
+        local function my_on_attach(bufnr)
+          local api = require "nvim-tree.api"
+
+          local function opts(desc)
+            return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+          end
+
+          -- default mappings
+          api.config.mappings.default_on_attach(bufnr)
+
+          -- custom mappings
+          vim.keymap.del('n', '<CR>', { buffer = bufnr })
+          vim.keymap.set('n', '<CR>',   api.node.open.vertical, opts('Open: Vertical Split'))
+          vim.keymap.del('n', '<Tab>', { buffer = bufnr })
+          vim.keymap.set('n', '<Tab>',   api.node.open.tab, opts('Open: New Tab'))
+          vim.keymap.set('n', '?',     api.tree.toggle_help, opts('Help'))
+          vim.keymap.del('n', 'u', { buffer = bufnr })
+          vim.keymap.set('n', 'u',       api.tree.change_root_to_parent, opts('Up'))
+          vim.keymap.set('n', 'cd',   api.tree.change_root_to_node, opts('CD'))
+        end
+
+        -- vim.keymap.del('n', '<Leader>e')
+        vim.keymap.set('n', '<Leader>e', '<Cmd>NvimTreeOpen<CR>', {silent = true})
+
+        -- pass to setup along with your other options
+        require("nvim-tree").setup {
+          filters = {
+            dotfiles = true,
+          },
+          on_attach = my_on_attach,
+          actions = {
+            open_file = {
+              window_picker = {
+                -- enable = false,
+                enable = true,
+              },
+            },
+          },
+        }
+
+      end
+  },
 
   -- インデント可視化
   {
@@ -130,7 +181,7 @@ return {
   -- { "williamboman/mason.nvim", version = "v1.9.0" },
   {
       "williamboman/mason-lspconfig.nvim",
-      -- version = "v1.22.0",
+      version = "v1.22.0",
       dependencies = {"neovim/nvim-lspconfig", "williamboman/mason.nvim", },
       config = function()
         require("mason").setup()
@@ -176,11 +227,19 @@ return {
             ['<C-e>'] = cmp.mapping.abort(),
             ['<CR>'] = cmp.mapping.confirm({ select = true }),
 
-         ['<C-p>'] = function()
+            ['<C-n>'] = function(fallback)
+              if cmp.visible() then
+                cmp.select_next_item()
+              else
+                fallback()
+              end
+            end,
+
+            ['<C-p>'] = function(fallback)
               if cmp.visible() then
                 cmp.select_prev_item()
               else
-                cmp.complete()
+                fallback()
               end
             end,
 
@@ -205,23 +264,6 @@ return {
                     fallback()
                   end
 
-              end
-            end,
-
-            -- ['<C-p>'] = function(fallback)
-            --   if cmp.visible() then
-            --     cmp.select_prev_item()
-            --   else
-            --       cmp.complete()
-            --   end
-            -- end,
-
-
-            ['<C-n>'] = function(fallback)
-              if cmp.visible() then
-                cmp.select_next_item()
-              else
-                  cmp.complete()
               end
             end,
 
@@ -338,7 +380,12 @@ return {
   },
 
   -- その他
-  { "edvb/catium.vim" },
+  {
+      "edvb/catium.vim",
+      config = function()
+          vim.o.statusline = vim.o.statusline:gsub("%%=", "%%=%%{g:Catium()}")
+      end
+  },
 
 }
 
