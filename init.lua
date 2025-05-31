@@ -43,6 +43,7 @@ require("lazy").setup({
     },
 })
 
+require("mapping")
 
 if vim.fn.has("wsl") == 1 then
     if vim.fn.executable("xsel") == 0 then

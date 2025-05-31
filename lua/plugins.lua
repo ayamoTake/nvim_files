@@ -142,9 +142,9 @@ return {
   -- ターミナルのウィンドウ整理
   {
       "willothy/flatten.nvim",
-      config = function()
-        require("flatten").setup({open = "alternate",})
-      end
+      opt = {
+        open = "alternate",
+      },
   },
 
   -- 置換ツール
@@ -181,14 +181,12 @@ return {
       "Julian/lean.nvim",
       dependencies = { "nvim-lua/plenary.nvim" },
       ft = "lean",
-      config = function()
-        require('lean').setup({
-            mappings = true,
-            lsp = {
-                editDelay=10,
-            },
-        })
-      end
+      opt = {
+        mappings = true,
+        lsp = {
+            editDelay=10,
+        },
+      },
   },
 
   -- Lean スイッチ切替
@@ -198,28 +196,14 @@ return {
   },
 
   -- LSP
-  {
-      "neovim/nvim-lspconfig",
-      config = function()
-        require('lspconfig').clangd.setup({
-            on_attach = function(client, bufnr)
-            end
-        })
-      end
-  },
   -- { "williamboman/mason.nvim", version = "v1.9.0" },
   {
       "williamboman/mason-lspconfig.nvim",
-      version = "v1.22.0",
+      -- version = "v1.22.0",
       dependencies = {"neovim/nvim-lspconfig", "williamboman/mason.nvim", },
       config = function()
         require("mason").setup()
         require("mason-lspconfig").setup()
-        require("mason-lspconfig").setup_handlers({
-          function(server_name)
-            require("lspconfig")[server_name].setup()
-          end,
-        })
       end
   },
 
