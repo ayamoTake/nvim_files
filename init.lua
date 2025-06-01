@@ -14,22 +14,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.cmd([[
-
-let s:plugs=get(s:,'plugs',get(g:,'plugs',{}))
-function! FindPlugin(name) abort
-        return has_key(s:plugs,a:name) ? isdirectory(s:plugs[a:name].dir ):0
-endfunction
-
-command! -nargs=1 UsePlugin if !FindPlugin(<args>) | finish | endif
-
-let g:config_nvim_vim_dir = expand('~/.config/nvim/vim')
-for file in split(globpath(g:config_nvim_vim_dir, '*.vim'), "\n")
-        execute 'source' . file
-endfor
-
-]])
-
 vim.api.nvim_create_autocmd("FocusGained", {
     callback = function()
         vim.opt.mouse = "nvi"
