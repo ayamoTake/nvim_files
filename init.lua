@@ -28,19 +28,18 @@ for file in split(globpath(g:config_nvim_vim_dir, '*.vim'), "\n")
         execute 'source' . file
 endfor
 
-" set cursorline
-" set cursorcolumn
-
-autocmd FocusGained * set mouse=nvi
-autocmd FocusLost * set mouse=
-
 ]])
 
-require("lazy").setup({
-    defaults = { lazy = false, },
-    spec = {
-        { import = "plugins" },
-    },
+vim.api.nvim_create_autocmd("FocusGained", {
+    callback = function()
+        vim.opt.mouse = "nvi"
+    end,
+})
+
+vim.api.nvim_create_autocmd("FocusLost", {
+    callback = function()
+        vim.opt.mouse = ""
+    end,
 })
 
 require("mapping")
@@ -63,18 +62,9 @@ if vim.fn.has("wsl") == 1 then
         }
     end
 end
+vim.opt.clipboard = "unnamedplus"
 
 
-
--- 透明化 
-vim.cmd([[
-  highlight Normal guibg=none
-  highlight NonText guibg=none
-  highlight Normal ctermbg=none
-  highlight NonText ctermbg=none
-  highlight NormalNC guibg=none
-  highlight NormalSB guibg=none
-]])
 
 -- LSPサーバアタッチ時の処理
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -93,6 +83,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:belowright split term://g++ % -o %:r && ./%:r<CR>', { noremap = true, silent = true })
 
+vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
 
 -- 検索
 vim.opt.hlsearch = true
@@ -113,7 +105,7 @@ vim.opt.wildmenu = true
 vim.opt.wildmode = "longest", "full"
 
 -- クリップボードにヤンク
-vim.opt.clipboard:append({ unnamedplus = true })
+-- vim.opt.clipboard:append({ unnamedplus = true })
 
 vim.cmd('let &t_SI .= "\\e[6 q"')
 vim.cmd('let &t_EI .= "\\e[2 q"')
@@ -130,3 +122,32 @@ vim.cmd([[
       \ exe "normal g`\"" | endif
     " end https://qiita.com/yahihi/items/4112ab38b2cc80c91b16
 ]])
+
+-- status line
+vim.opt.laststatus = 2
+
+if vim.fn.winwidth(0) >= 130 then
+    vim.opt.statusline = "%F"
+else
+    vim.opt.statusline = "%t"
+end
+
+vim.opt.statusline:append(" %y%=[%l/%L]")
+
+require("lazy").setup({
+    defaults = { lazy = false, },
+    spec = {
+        { import = "plugins" },
+    },
+})
+
+-- 透明化 
+vim.cmd([[
+  highlight Normal guibg=none
+  highlight NonText guibg=none
+  highlight Normal ctermbg=none
+  highlight NonText ctermbg=none
+  highlight NormalNC guibg=none
+  highlight NormalSB guibg=none
+]])
+
