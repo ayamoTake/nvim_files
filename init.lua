@@ -93,3 +93,40 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:belowright split term://g++ % -o %:r && ./%:r<CR>', { noremap = true, silent = true })
 
+
+-- 検索
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
+vim.opt.ignorecase = false
+
+-- タブ
+vim.opt.expandtab = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+-- vim.opt.autoindent = false
+
+-- 矩形選択
+vim.opt.virtualedit="block"
+
+-- 候補のマッチ
+vim.opt.wildmenu = true
+vim.opt.wildmode = "longest", "full"
+
+-- クリップボードにヤンク
+vim.opt.clipboard:append({ unnamedplus = true })
+
+vim.cmd('let &t_SI .= "\\e[6 q"')
+vim.cmd('let &t_EI .= "\\e[2 q"')
+vim.cmd('let &t_SR .= "\\e[4 q"')
+
+vim.opt.showmatch = true
+vim.opt.splitbelow = true
+vim.opt.undofile = true
+-- vim.opt.relativenumber = true
+
+vim.cmd([[
+    " https://qiita.com/yahihi/items/4112ab38b2cc80c91b16
+    if line("'\"") > 0 && line("'\"") <= line("$") |
+      \ exe "normal g`\"" | endif
+    " end https://qiita.com/yahihi/items/4112ab38b2cc80c91b16
+]])
