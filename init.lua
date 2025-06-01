@@ -48,8 +48,6 @@ if vim.fn.has("wsl") == 1 then
 end
 vim.opt.clipboard = "unnamedplus"
 
-
-
 -- LSPサーバアタッチ時の処理
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ctx)
@@ -127,11 +125,14 @@ require("lazy").setup({
 
 -- 透明化 
 vim.cmd([[
-  highlight Normal guibg=none
-  highlight NonText guibg=none
-  highlight Normal ctermbg=none
-  highlight NonText ctermbg=none
-  highlight NormalNC guibg=none
-  highlight NormalSB guibg=none
+  highlight Normal       ctermbg=none guibg=none
+  highlight NormalNC     ctermbg=none guibg=none
+  highlight NormalSB     ctermbg=none guibg=none
+  highlight NonText      ctermbg=none guibg=none
+  highlight LineNr       ctermbg=none guibg=none
+  highlight LineNrAbove  ctermbg=none guibg=none
+  highlight LineNrBelow  ctermbg=none guibg=none
+  highlight CursorLineNr ctermbg=none guibg=none
+  highlight SignColumn   ctermbg=none guibg=none
 ]])
 
