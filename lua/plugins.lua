@@ -128,7 +128,7 @@ return {
             callback = function()
                 vim.keymap.set('n', '<Leader>u', function()
                     local filename = vim.fn.expand("%:p")
-                    local cmd = string.format("g++ '%s' -o '%s' && echo Successed compiling '%s'", filename, "a.out", "a.out")
+                    local cmd = string.format("g++ '%s' -o '%s' --std=c++20 && echo Successed compiling '%s'", filename, "a.out", "a.out")
                     vim.cmd("T " .. cmd)
                     vim.cmd("wincmd j")
                     vim.cmd("startinsert")
@@ -239,7 +239,6 @@ return {
             -- ['<C-Space>'] = cmp.mapping.complete(),
             ['<C-e>'] = cmp.mapping.abort(),
             ['<CR>'] = cmp.mapping.confirm({ select = true }),
-
             ['<C-n>'] = function(fallback)
               if cmp.visible() then
                 cmp.select_next_item()
@@ -247,7 +246,6 @@ return {
                 fallback()
               end
             end,
-
             ['<C-p>'] = function(fallback)
               if cmp.visible() then
                 cmp.select_prev_item()
@@ -255,7 +253,6 @@ return {
                 fallback()
               end
             end,
-
             ['<TAB>'] = function(fallback)
               if vim.fn['vsnip#expandable']() == 1 then
                   vim.fn['vsnip#expand']()
@@ -270,16 +267,14 @@ return {
               else
                   local col = vim.fn.col('.') - 1
                   local line = vim.fn.getline('.')
-
                   if col > 0 and line:sub(col, col):match('%S') then
+                      -- C-p
                     cmp.complete()
                   else
                     fallback()
                   end
-
               end
             end,
-
           }),
           sources = cmp.config.sources({
             { name = 'nvim_lsp' },
@@ -392,6 +387,17 @@ return {
       end
   },
 
+  -- 括弧で囲む
+  {
+      "kylechui/nvim-surround",
+      version = "^3.0.0", -- Use for stability; omit to use `main` branch for the latest features
+      event = "VeryLazy",
+      config = function()
+          require("nvim-surround").setup({
+              -- Configuration here, or leave empty to use defaults
+          })
+      end
+  },
   -- その他
   {
       "edvb/catium.vim",

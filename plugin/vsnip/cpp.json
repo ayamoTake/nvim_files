@@ -6,7 +6,32 @@
       "#include <bits/stdc++.h>",
       "using namespace std;",
       "using ll = long long;",
+      "ll LINF = 2e18;",
       "",
+      "void YN(bool cond) {",
+      "    if (cond) {",
+      "        std::cout << \"Yes\" << std::endl;",
+      "    } else {",
+      "        std::cout << \"No\" << std::endl;",
+      "    }",
+      "}",
+
+      "",
+      "template<class T>",
+      "std::istream& operator>>(std::istream& in, vector<T>& a) {",
+      "    for (auto& e : a) {",
+      "        in >> e;",
+      "    }",
+      "    return in;",
+      "}",
+      "",
+      "template<class T>",
+      "std::ostream& operator<<(std::ostream& out, vector<T>& a) {",
+      "    for (int i = 0; i < (int)a.size(); i++) {",
+      "        out << a[i] << (i != a.size() ? \" \" : \"\");",
+      "    }",
+      "    return out;",
+      "}",
       "",
       "int main() {",
       "    ${0}",
@@ -59,7 +84,7 @@
   },
 
   "out": {
-
+    "prefix": "out",
     "body": [
         "cout << $1 << endl;",
         "${0}"
