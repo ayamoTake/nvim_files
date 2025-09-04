@@ -128,7 +128,7 @@ return {
             callback = function()
                 vim.keymap.set('n', '<Leader>u', function()
                     local filename = vim.fn.expand("%:p")
-                    local cmd = string.format("g++ '%s' -o '%s' --std=c++20 && echo Successed compiling '%s'", filename, "a.out", "a.out")
+                    local cmd = string.format("g++ '%s' -o '%s' --std=c++20", filename, "a.out")
                     vim.cmd("T " .. cmd)
                     vim.cmd("wincmd j")
                     vim.cmd("startinsert")
@@ -174,6 +174,14 @@ return {
               end,
           })
       end
+  },
+
+  {
+    "ellisonleao/carbon-now.nvim",
+    lazy = true,
+    cmd = "CarbonNow",
+    ---@param opts cn.ConfigSchema
+    opts = { [[ your custom config here ]] }
   },
 
   -- Lean 向け
@@ -238,7 +246,17 @@ return {
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
             -- ['<C-Space>'] = cmp.mapping.complete(),
             ['<C-e>'] = cmp.mapping.abort(),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
+            ['<CR>'] = function(fallback)
+                if cmp.visible() then
+                    return
+                else
+                    vim.api.nvim_feedkeys(
+                        vim.api.nvim_replace_termcodes("<CR><C-o>zz", true, true, true),
+                        "n",
+                        true
+                    )
+                end
+            end,
             ['<C-n>'] = function(fallback)
               if cmp.visible() then
                 cmp.select_next_item()

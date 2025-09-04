@@ -1,9 +1,11 @@
 local set = vim.keymap.set
 
 local mapping = {
-    { mode = "n", from = "j", to = "jzz" },
-    { mode = "n", from = "k", to = "kzz" },
+    { mode = "n", from = "j", to = "gjzz" },
+    { mode = "n", from = "k", to = "gkzz" },
     { mode = "i", from = "uu", to = "<Esc>" },
+    { mode = "i", from = "jj", to = "<Esc>" },
+    { mode = "i", from = "<CR>", to = "<CR><C-o>zz" },
     { mode = "n", from = "<C-j>", to = "gj" },
     { mode = "n", from = "<C-k>", to = "gk" },
     { mode = "", from = "K", to = "{zz" },
@@ -11,7 +13,7 @@ local mapping = {
     { mode = "", from = "H", to = "^" },
     { mode = "", from = "L", to = "$" },
     { mode = "", from = "G", to = "Gzz" },
-    { mode = "n", from = "o", to = "zzo" },
+    { mode = "n", from = "o", to = "o<C-o>zz" },
     { mode = "n", from = "O", to = "zzO" },
     { mode = "n", from = "{", to = "{zz" },
     { mode = "n", from = "}", to = "}zz" },
@@ -30,6 +32,7 @@ local mapping = {
     { mode = "n", from = "mm", to = '`' },
 
     { mode = "t", from = "uu", to = "<C-\\><C-n>" },
+    { mode = "t", from = "jj", to = "<C-\\><C-n>" },
     { mode = "t", from = "<Esc>", to = "<C-\\><C-n>" },
     { mode = "n", from = "gu", to = 'vgU' },
     { mode = "v", from = "gu", to = 'vgU' },

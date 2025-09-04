@@ -466,8 +466,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:belowright split term://g++ % -o %:r && ./%:r<CR>', { noremap = true, silent = true })
 
-vim.opt.cursorline = true
-vim.opt.cursorcolumn = true
+-- vim.opt.cursorline = true
+-- vim.opt.cursorcolumn = true
 
 -- 検索
 vim.opt.hlsearch = true
@@ -537,3 +537,28 @@ vim.cmd([[
   highlight SignColumn   ctermbg=none guibg=none
 ]])
 
+-- 、や。でWORD ジャンプをする.
+
+-- 日本語句読点（空白はここに含めない）
+local punct = '、。！？…・：；「」『』（）［］【】〈〉《》〔〕｛｝｡､･〜—―'
+
+-- 区切りを「空白 OR 句読点クラス」と明示するパターン片
+local sep_group = '\\v(\\s|\\n|[' .. punct .. '])'    -- 1 個の区切り (very-magic モード)
+local sep_group_plus = sep_group .. '+'          -- 1 個以上
+local sep_group_star = sep_group .. '*'          -- 0 個以上
+
+-- 次の“語”の先頭へ（W 代替）：現在の非区切り塊 + 区切りを飛び越えて次の非区切りの先頭へ
+local function JP_W()
+  if vim.fn.search('\\v\\S{-}'..sep_group_plus..'\\zs\\S', 'W')  == 0 then
+    -- もし今が区切り上なら、その連続を飛ばして次の非区切りへ
+    vim.fn.search('\\v'..sep_group_star..'\\zs\\S', 'W')
+  end
+end
+
+-- 次の“語”の末尾へ（E 代替）：非区切りの連続の末尾（区切り直前 or 行末）へ
+local function JP_E()
+  vim.fn.search('\\v\\S+\\ze(\\s|\\n|['..punct..']|$)', 'We')
+end
+
+vim.keymap.set({'n','x','o'}, 'W', JP_W, {silent=true, desc='W: JP punctuation as separators'})
+vim.keymap.set({'n','x','o'}, 'E', JP_E, {silent=true, desc='E: JP punctuation as separators'})

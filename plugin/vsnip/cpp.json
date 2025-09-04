@@ -1,21 +1,32 @@
 {
 
-  "main": {
-    "prefix": "main",
+  "code": {
+    "prefix": "code",
     "body": [
       "#include <bits/stdc++.h>",
+      "",
+      "#if __has_include(\"../debug.hpp\")",
+      "    #include \"../debug.hpp\"",
+      "    #define HAS_DEBUG_HPP",
+      "#else",
+      "    #define DBG(...) ((void)0)",
+      "#endif",
+      "",
       "using namespace std;",
       "using ll = long long;",
       "ll LINF = 2e18;",
       "",
-      "void YN(bool cond) {",
+      "bool YN(bool cond) {",
       "    if (cond) {",
       "        std::cout << \"Yes\" << std::endl;",
       "    } else {",
       "        std::cout << \"No\" << std::endl;",
       "    }",
+      "    return cond;",
       "}",
-
+      "",
+      "#define ALL(a) a.begin(),a.end()",
+      "#define ALLR(a) a.rbegin(),a.rend()",
       "",
       "template<class T>",
       "std::istream& operator>>(std::istream& in, vector<T>& a) {",
@@ -25,16 +36,27 @@
       "    return in;",
       "}",
       "",
-      "template<class T>",
-      "std::ostream& operator<<(std::ostream& out, vector<T>& a) {",
-      "    for (int i = 0; i < (int)a.size(); i++) {",
-      "        out << a[i] << (i != a.size() ? \" \" : \"\");",
-      "    }",
-      "    return out;",
-      "}",
+      "#define FIRST(X, ...) X",
+      "#define SECOND(X, ...) FIRST(__VA_ARGS__)",
+      "#define THIRD(X, ...) SECOND(__VA_ARGS__)",
+      "#define GET_MACRO(_1,_2,_3,NAME,...) NAME",
+      "#define ARG(...) GET_MACRO(__VA_ARGS__, FIRST(__VA_ARGS__) SECOND(__VA_ARGS__)THIRD(__VA_ARGS__); cin >> SECOND(__VA_ARGS__);,FIRST(__VA_ARGS__) SECOND(__VA_ARGS__); cin >> SECOND(__VA_ARGS__);)",
+      "#define INPUT(seq) IN0 seq",
+      "#define INx(next, ...) GET_MACRO(__VA_ARGS__,I_NODE(next, __VA_ARGS__),I_NODE(next, __VA_ARGS__),)",
+      "#define IN0(...) INx(1, __VA_ARGS__)",
+      "#define IN1(...) INx(0, __VA_ARGS__)",
+      "#define I_NODE(next, ...) ARG(__VA_ARGS__) IN##next",
       "",
-      "int main() {",
-      "    ${0}",
+      "int main(int argc, char** argv) {",
+      "#ifdef HAS_DEBUG_HPP",
+      "    if (argc > 1 && std::string(argv[1]) == \"--debug\") {",
+      "        debug::enabled = true;",
+      "    }",
+      "#endif",
+      "",
+      "    INPUT(",
+      "         (${0})",
+      "    (0));",
       "",
       "    return 0;",
       "}"
@@ -45,9 +67,17 @@
   "for": {
     "prefix": "for",
     "body": [
-      "for (int ${1} = 0; $1 < (int)${2}; $1++) {${0}}"
+      "for (ll ${1} = 0; $1 < (ll)${2}; $1++) {${0}}"
     ],
     "description": "for loop"
+  },
+
+  "dfor": {
+    "prefix": "dfor",
+    "body": [
+      "for (ll ${1} = ${2}; $1 >= 0; $1--) {${0}}"
+    ],
+    "description": "dfor loop"
   },
 
   "if": {
@@ -61,7 +91,7 @@
   "vec": {
     "prefix": "vec",
     "body": [
-      "vector<${1}> ${2}"
+      "vector<${1}>${2}"
     ],
     "description": "vec"
   },
@@ -77,8 +107,9 @@
   "in": {
     "prefix": "in",
     "body": [
-        "${1} ${2}; cin >> $2;",
-        "${0}"
+        "INPUT(",
+        "    (${1})",
+        "(0));"
     ],
     "description": "input variable"
   },
@@ -86,8 +117,7 @@
   "out": {
     "prefix": "out",
     "body": [
-        "cout << $1 << endl;",
-        "${0}"
+        "cout << $1 << endl;"
     ],
     "description": "output variable"
   },
