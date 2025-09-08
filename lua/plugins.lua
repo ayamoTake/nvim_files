@@ -252,6 +252,7 @@ return {
                     cmp.confirm({ select = true })
                 else
                     fallback()
+                    vim.cmd("normal! zz")
                 end
             end,
             ['<C-n>'] = function(fallback)
