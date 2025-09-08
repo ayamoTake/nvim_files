@@ -249,13 +249,9 @@ return {
             ['<C-e>'] = cmp.mapping.abort(),
             ['<CR>'] = function(fallback)
                 if cmp.visible() then
-                    return
+                    cmp.confirm({ select = true })
                 else
-                    vim.api.nvim_feedkeys(
-                        vim.api.nvim_replace_termcodes("<CR><C-o>zz", true, true, true),
-                        "n",
-                        true
-                    )
+                    fallback()
                 end
             end,
             ['<C-n>'] = function(fallback)
