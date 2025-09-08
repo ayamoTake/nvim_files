@@ -5,7 +5,7 @@ local mapping = {
     { mode = "n", from = "k", to = "gkzz" },
     { mode = "i", from = "uu", to = "<Esc>" },
     { mode = "i", from = "jj", to = "<Esc>" },
-    { mode = "i", from = "<CR>", to = "<CR><C-o>zz" },
+    -- { mode = "i", from = "<CR>", to = "<CR><C-o>zz" },
     { mode = "n", from = "<C-j>", to = "gj" },
     { mode = "n", from = "<C-k>", to = "gk" },
     { mode = "", from = "K", to = "{zz" },

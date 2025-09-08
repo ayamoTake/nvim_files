@@ -478,7 +478,8 @@ vim.opt.ignorecase = false
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
--- vim.opt.autoindent = false
+-- vim.opt.autoindent = true
+-- vim.opt.smartindent = true
 
 
 -- 矩形選択
@@ -498,7 +499,6 @@ vim.cmd('let &t_SR .= "\\e[4 q"')
 vim.opt.showmatch = true
 vim.opt.splitbelow = true
 vim.opt.undofile = true
--- vim.opt.relativenumber = true
 
 vim.cmd([[
     " https://qiita.com/yahihi/items/4112ab38b2cc80c91b16
@@ -538,16 +538,9 @@ vim.cmd([[
   highlight SignColumn   ctermbg=none guibg=none
 ]])
 
--- vim.opt.iskeyword:remove("_")
-vim.opt.iskeyword:remove("、")
-vim.opt.iskeyword:remove("。")
-vim.opt.iskeyword:remove("！")
-vim.opt.iskeyword:remove("？")
-vim.opt.iskeyword:remove("・")
-
 -- 、や。でWORD ジャンプをする.
 -- 日本語句読点（空白はここに含めない）
-local punct = '、。！？…；「」『』（）［］【】〈〉《》〔〕｛｝｡､〜—―'
+local punct = '、。！？…；「」『』（）［］【】〈〉《》〔〕｛｝｡､〜'
 
 -- 区切りを「空白 OR 句読点クラス」と明示するパターン片
 local sep_group = '\\v(\\s|\\n|[' .. punct .. '])'    -- 1 個の区切り (very-magic モード)
@@ -844,6 +837,10 @@ end, { --[[expr = true, --]] noremap = true, silent = true })
 
 -- 移動した文字の情報を表示
 function unicode_name(char)
+    if char == "" then return "<unknown>" end
+    if char == '"' then return "QUOTATION MARK" end
+    if char == "'" then return "APOSTROPHE" end
+
     local cmd = string.format(
         [[python3 -c "import unicodedata; import sys;
 try: print(unicodedata.name('%s'))
@@ -868,8 +865,7 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
       local char_index = vim.str_utfindex(line, col)
       local cur_char = vim.fn.strcharpart(line, char_index, 1)
       local cur_cp = vim.fn.char2nr(cur_char)
-      -- vim.notify(string.format("Current char: %s (U+%04X) %s", cur_char, cur_cp, unicode_name(cur_char)))
+      vim.notify(string.format("Current char: %s (U+%04X) %s", cur_char, cur_cp, unicode_name(cur_char)))
     end
   end,
 })
-
