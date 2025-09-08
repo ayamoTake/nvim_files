@@ -478,8 +478,8 @@ vim.opt.ignorecase = false
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
--- vim.opt.autoindent = true
--- vim.opt.smartindent = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
 
 
 -- 矩形選択
@@ -836,36 +836,34 @@ vim.keymap.set({ "n", "v", }, "b", function()
 end, { --[[expr = true, --]] noremap = true, silent = true })
 
 -- 移動した文字の情報を表示
-function unicode_name(char)
-    if char == "" then return "<unknown>" end
-    if char == '"' then return "QUOTATION MARK" end
-    if char == "'" then return "APOSTROPHE" end
-
+function unicode_name(cp)
     local cmd = string.format(
         [[python3 -c "import unicodedata; import sys;
-try: print(unicodedata.name('%s'))
-except Exception: print('<unknown>')"]],
-        char
+print(unicodedata.name(chr(%d), '<unknown>'))" 2> /dev/null]], -- エラーを捨てる.
+        cp
     )
-
-    local ok, result = pcall(vim.fn.system, cmd)
-    if not ok then
-        return "<error>"
-    end
+    local result = vim.fn.systemlist(cmd)[1] or "<unknown>"
 
     return vim.fn.trim(result)
 end
 
 vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-  pattern = "*",
-  callback = function()
-    if vim.fn.mode() == 'n' then
-      local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-      local line = vim.api.nvim_get_current_line()
-      local char_index = vim.str_utfindex(line, col)
-      local cur_char = vim.fn.strcharpart(line, char_index, 1)
-      local cur_cp = vim.fn.char2nr(cur_char)
-      vim.notify(string.format("Current char: %s (U+%04X) %s", cur_char, cur_cp, unicode_name(cur_char)))
-    end
-  end,
+    pattern = "*",
+    callback = function()
+        if vim.fn.mode() == 'n' then
+            local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+            local line = vim.api.nvim_get_current_line()
+            local char_index = vim.str_utfindex(line, col)
+            local cur_char = vim.fn.strcharpart(line, char_index, 1)
+            local cur_cp = vim.fn.char2nr(cur_char)
+            local name = unicode_name(cur_cp)
+            local msg = string.format("(U+%04X) %s %s", cur_cp, cur_char, name)
+
+            local max_width = vim.api.nvim_get_option("columns")
+            local available_width = math.floor(max_width*0.7)
+
+            vim.notify(msg:sub(1, available_width))
+
+        end
+    end,
 })
