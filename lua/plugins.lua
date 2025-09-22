@@ -252,7 +252,6 @@ return {
                     cmp.confirm({ select = true })
                 else
                     fallback()
-                    -- vim.cmd("normal! zz")
                 end
             end,
             ['<C-n>'] = function(fallback)
@@ -456,5 +455,24 @@ return {
       end
   },
 
+  {
+      'nvim-treesitter/nvim-treesitter',
+      build = ':TSUpdate',
+  },
+
+  {
+      'joshuadanpeterson/typewriter',
+      config = function()
+          require('typewriter').setup({
+              keep_cursor_position = true,
+              enable_notifications = false,
+              enable_horizontal_scroll = false,
+              start_enabled = true,
+              always_center = true,
+              -- always_center_filetypes = {},
+          })
+      end,
+      opts = {}
+  },
 }
 

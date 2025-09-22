@@ -847,6 +847,7 @@ print(unicodedata.name(chr(%d), '<unknown>'))" 2> /dev/null]], -- エラーを�
     return vim.fn.trim(result)
 end
 
+vim.o.cmdheight = 2
 vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
     pattern = "*",
     callback = function()
@@ -862,7 +863,8 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
             local max_width = vim.api.nvim_get_option("columns")
             local available_width = math.floor(max_width*0.7)
 
-            vim.notify(msg:sub(1, available_width))
+            -- vim.notify(msg:sub(1, available_width))
+            vim.notify(msg)
 
         end
     end,
