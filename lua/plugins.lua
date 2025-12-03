@@ -129,7 +129,7 @@ return {
             callback = function()
                 vim.keymap.set('n', '<Leader>u', function()
                     local filename = vim.fn.expand("%:p")
-                    local cmd = string.format("g++ '%s' -o '%s' --std=c++20", filename, "a.out")
+                    local cmd = string.format("g++ '%s' -o '%s' --std=c++20 -Wall", filename, "a.out")
                     vim.cmd("T " .. cmd)
                     vim.cmd("wincmd j")
                     vim.cmd("startinsert")
@@ -387,8 +387,8 @@ return {
                       local action_state = require('telescope.actions.state')
                       map('n', 'q', actions.close)
 
-                      map('i', '<CR>', actions.select_tab)
-                      map('n', '<CR>', actions.select_tab)
+                      -- map('i', '<CR>', actions.select_tab)
+                      -- map('n', '<CR>', actions.select_tab)
                       map('i', '<Tab>', actions.toggle_selection)
                       map('n', '<Tab>', actions.toggle_selection)
                       return true
@@ -420,7 +420,7 @@ return {
       "kaarmu/typst.vim",
       ft = "typst",
       config = function()
-        vim.g.typst_embedded_languages = {'c', 'cpp', 'python', 'rust'}
+        vim.g.typst_embedded_languages = {'c', 'cpp', 'python', 'rust', 'java', }
         vim.g.typst_pdf_viewer = "tdf"
         vim.g.typst_auto_open_quickfix = 0
       end

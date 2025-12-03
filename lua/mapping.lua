@@ -1,8 +1,8 @@
 local set = vim.keymap.set
 
 local mapping = {
-    { mode = "n", from = "j", to = "gj" },
-    { mode = "n", from = "k", to = "gk" },
+    -- { mode = "n", from = "j", to = "gj" },
+    -- { mode = "n", from = "k", to = "gk" },
     { mode = "i", from = "uu", to = "<Esc>" },
     { mode = "i", from = "jj", to = "<Esc>" },
     { mode = "n", from = "<C-j>", to = "gj" },

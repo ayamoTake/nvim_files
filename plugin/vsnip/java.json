@@ -5,5 +5,41 @@
         "System.out.println(${1});"
     ],
     "description": "output"
+  },
+
+  "class": {
+      "prefix": "class",
+      "body": [
+          "class ${1} {${0}}"
+      ]
+  },
+
+  "if": {
+      "prefix": "if",
+      "body": [
+          "if (${1}) {${0}}"
+      ]
+  },
+
+  "while": {
+      "prefix": "while",
+      "body": [
+          "while (${1}) {${0}}"
+      ]
+  },
+
+  "for": {
+      "prefix": "for",
+      "body": [
+          "for (int ${1} = 0; ${1} < ${2}; ${1}++) {${0}}"
+      ]
+  },
+
+  "dfor": {
+      "prefix": "dfor",
+      "body": [
+          "for (int ${1} = ${2}; ${1} >= 0; ${1}--) { ${0} }"
+      ]
   }
+
 }
