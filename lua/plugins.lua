@@ -443,7 +443,12 @@ return {
       event = "VeryLazy",
       config = function()
           require("nvim-surround").setup({
-              -- Configuration here, or leave empty to use defaults
+              keymaps = {
+                  normal = "<Leader>s",
+                  visual = "s",
+                  delete = "<Leader>sd",
+                  change = "<Leader>sc",
+              }
           })
       end
   },
