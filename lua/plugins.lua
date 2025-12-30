@@ -379,7 +379,7 @@ return {
                   end
               })
          end, {desc='List and select buffers'})
-         vim.keymap.set('n', 'gf', function()
+         vim.keymap.set('n', 'gi', function()
               require('telescope.builtin').find_files({
                   previewer = false,
                   attach_mappings = function(prompt_bufnr, map)
