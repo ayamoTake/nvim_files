@@ -367,7 +367,7 @@ return {
       "nvim-telescope/telescope.nvim",
       dependencies = { "nvim-lua/plenary.nvim" },
       config = function()
-          vim.keymap.set('n', 'gl', function()
+          vim.keymap.set('n', '<Leader>l', function()
               require('telescope.builtin').buffers({
                   initial_mode = 'normal',  -- 開いた時点で normal モード
                   sort_mru = true,
@@ -379,7 +379,7 @@ return {
                   end
               })
          end, {desc='List and select buffers'})
-         vim.keymap.set('n', 'gi', function()
+         vim.keymap.set('n', '<Leader>i', function()
               require('telescope.builtin').find_files({
                   previewer = false,
                   attach_mappings = function(prompt_bufnr, map)
@@ -387,8 +387,8 @@ return {
                       local action_state = require('telescope.actions.state')
                       map('n', 'q', actions.close)
 
-                      -- map('i', '<CR>', actions.select_tab)
-                      -- map('n', '<CR>', actions.select_tab)
+                      map('i', '<CR>', actions.select_tab)
+                      map('n', '<CR>', actions.select_tab)
                       map('i', '<Tab>', actions.toggle_selection)
                       map('n', '<Tab>', actions.toggle_selection)
                       return true

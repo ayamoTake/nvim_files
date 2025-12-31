@@ -15,10 +15,10 @@ local mapping = {
     { mode = "n", from = "O", to = "O" },
     { mode = "n", from = "{", to = "{" },
     { mode = "n", from = "}", to = "}" },
-    { mode = "n", from = "<Leader>h", to = "<C-w>h" },
-    { mode = "n", from = "<Leader>j", to = "<C-w>j" },
-    { mode = "n", from = "<Leader>k", to = "<C-w>k" },
-    { mode = "n", from = "<Leader>l", to = "<C-w>l" },
+    { mode = "n", from = "gh", to = "<C-w>h" },
+    { mode = "n", from = "gj", to = "<C-w>j" },
+    { mode = "n", from = "gk", to = "<C-w>k" },
+    { mode = "n", from = "gl", to = "<C-w>l" },
 
     -- 連続ペースト
     { mode = "x", from = "p", to = '"_xP' },
@@ -32,10 +32,10 @@ local mapping = {
     { mode = "t", from = "uu", to = "<C-\\><C-n>" },
     { mode = "t", from = "jj", to = "<C-\\><C-n>" },
     { mode = "t", from = "<Esc>", to = "<C-\\><C-n>" },
-    { mode = "n", from = "gu", to = 'vgU' },
-    { mode = "v", from = "gu", to = 'vgU' },
-    { mode = "n", from = "gl", to = 'vgu' },
-    { mode = "v", from = "gl", to = 'vgu' },
+    { mode = "n", from = "gcu", to = 'vgU' },
+    { mode = "v", from = "gcu", to = 'vgU' },
+    { mode = "n", from = "gcl", to = 'vgu' },
+    { mode = "v", from = "gcl", to = 'vgu' },
     { mode = "n", from = "dp", to = 'dap' },
 
     -- count character in curent line
@@ -44,6 +44,8 @@ local mapping = {
     { mode = "n", from = "<Leader><Leader>t", to = ':tabnew | term<CR>' },
 
 
+    { mode = "n", from = "<Leader>s", to = ':sp<CR>' },
+    { mode = "n", from = "<Leader>v", to = ':vs<CR>' },
 }
 
 for _, m in pairs(mapping) do
