@@ -369,33 +369,49 @@ return {
       config = function()
           vim.keymap.set('n', '<Leader>l', function()
               require('telescope.builtin').buffers({
-                  initial_mode = 'normal',  -- 開いた時点で normal モード
                   sort_mru = true,
-                  previewer = false,
-                  attach_mappings = function(prompt_bufnr, map)
-                      map('n', 'q', require('telescope.actions').close)
-                      map('n', '<CR>', require('telescope.actions').select_default)
-                      return true
-                  end
+                  -- previewer = false,
               })
-         end, {desc='List and select buffers'})
-         vim.keymap.set('n', '<Leader>i', function()
-              require('telescope.builtin').find_files({
-                  previewer = false,
-                  attach_mappings = function(prompt_bufnr, map)
-                      local actions = require('telescope.actions') 
-                      local action_state = require('telescope.actions.state')
-                      map('n', 'q', actions.close)
+          end, {desc='List and select buffers'})
 
-                      map('i', '<CR>', actions.select_tab)
-                      map('n', '<CR>', actions.select_tab)
-                      map('i', '<Tab>', actions.toggle_selection)
-                      map('n', '<Tab>', actions.toggle_selection)
-                      return true
-                  end
-              })
-         end, {desc='Find files'})
+         require('telescope').load_extension("file_browser")
+
+          require("telescope").setup {
+              defaults = {
+                  initial_mode = 'normal',
+                  previewer = false,
+                  mappings = {
+                      ["n"] = {
+                          ["q"] = require("telescope.actions").close,
+                          ["<CR>"] = require("telescope.actions").select_tab_drop,
+                          ["g<CR>"] = require("telescope.actions").select_default,
+                      },
+                      ["i"] = {
+                          ["<CR>"] = require("telescope.actions").select_tab_drop,
+                          ["g<CR>"] = require("telescope.actions").select_default,
+                      }
+                  }
+              }
+          }
       end
+  },
+
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+        vim.keymap.set("n", "<Leader><Leader>l", function()
+           require("telescope").extensions.file_browser.file_browser({
+             hidden = true,
+             respect_gitignore = false,
+             grouped = false,
+             -- previewer = false,
+           })
+        end, { desc = "Browse files (tab jump)" })
+    end,
   },
 
   -- Markdown 系
