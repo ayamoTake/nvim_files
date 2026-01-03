@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 -- vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:belowright split term://g++ % -o %:r && ./%:r<CR>', { noremap = true, silent = true })
 
--- vim.opt.cursorline = true
+vim.opt.cursorline = true
 -- vim.opt.cursorcolumn = true
 
 -- 検索
@@ -133,8 +133,9 @@ vim.cmd([[
   highlight LineNr       ctermbg=none guibg=none
   highlight LineNrAbove  ctermbg=none guibg=none
   highlight LineNrBelow  ctermbg=none guibg=none
-  highlight CursorLineNr ctermbg=none guibg=none
   highlight SignColumn   ctermbg=none guibg=none
+  highlight CursorLine cterm=underline gui=underline guibg=none
+  highlight CursorLineNr ctermbg=none guibg=none
 ]])
 
 -- 、や。でWORD ジャンプをする.
