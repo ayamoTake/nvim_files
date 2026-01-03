@@ -49,6 +49,8 @@ local mapping = {
 
     { mode = "n", from = "=", to = '<C-w>=' },
 
+    { mode = "v", from = "<C-j>", to = ':m \'>+1<CR>gv=gv' },
+    { mode = "v", from = "<C-k>", to = ':m \'<-2<CR>gv=gv' },
 }
 
 for _, m in pairs(mapping) do
