@@ -46,6 +46,9 @@ local mapping = {
 
     { mode = "n", from = "<Leader>s", to = ':sp<CR>' },
     { mode = "n", from = "<Leader>v", to = ':vs<CR>' },
+
+    { mode = "n", from = "=", to = '<C-w>=' },
+
 }
 
 for _, m in pairs(mapping) do

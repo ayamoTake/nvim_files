@@ -495,5 +495,28 @@ return {
       end,
       opts = {}
   },
+
+  {
+      'nguyenvukhang/nvim-toggler',
+      config = function()
+          require('nvim-toggler').setup({
+              inverses = {
+                  ['True'] = 'False',
+                  ['Yes'] = 'No',
+                  ['左'] = '右',
+                  ['←'] = '→',
+                  ['>'] = '<=',
+                  ['<'] = '>=',
+                  ['&&'] = '||',
+                  ['&'] = '|',
+              },
+              remove_default_keybinds = true,
+              autoselect_longest_match = true,
+          })
+          vim.keymap.set({ 'n', 'v' }, '<leader>i', require('nvim-toggler').toggle)
+      end,
+      opts = {}
+  },
+
 }
 
