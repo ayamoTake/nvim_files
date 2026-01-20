@@ -58,9 +58,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
     set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { buffer = true })
     set("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { buffer = true })
     set("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { buffer = true })
-    set("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", { buffer = true })
-
+    -- set("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", { buffer = true })
+    set("n", "<space>xf", "<cmd>lua vim.diagnostic.open_float()<CR>", { buffer = true })
   end,
+})
+
+vim.diagnostic.config({
+  underline = true,
+  signs = false,
 })
 
 -- vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:belowright split term://g++ % -o %:r && ./%:r<CR>', { noremap = true, silent = true })
@@ -79,6 +84,8 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.autoindent = true
 vim.opt.smartindent = true
+
+
 
 
 -- 矩形選択
@@ -136,7 +143,9 @@ vim.cmd([[
   highlight SignColumn   ctermbg=none guibg=none
   highlight CursorLine cterm=underline gui=underline guibg=none
   highlight CursorLineNr ctermbg=none guibg=none
+  highlight link CursorLineNr LineNr
 ]])
+
 
 -- 、や。でWORD ジャンプをする.
 -- 日本語句読点（空白はここに含めない）
@@ -469,3 +478,65 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
         end
     end,
 })
+
+
+-- 部分ハイライト
+-- vim.api.nvim_set_hl(0, "RelIntervalLineNr", {
+--   highlight CursorLine cterm=underline gui=underline
+-- })
+
+-- local ns = vim.api.nvim_create_namespace("rel_line_interval")
+--
+-- local function highlight_relative_interval(interval)
+--   local buf = vim.api.nvim_get_current_buf()
+--   local cursor = vim.api.nvim_win_get_cursor(0)[1]
+--   local last = vim.api.nvim_buf_line_count(buf)
+--
+--   vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
+--
+--   for lnum = 1, last do
+--     local rel = math.abs(lnum - cursor)
+--     if rel ~= 0 and rel % interval == 0 then
+--       -- 行番号カラム（0 列目）
+--       vim.api.nvim_buf_set_extmark(buf, ns, lnum - 1, 0, {
+--         hl_group = vim.api.nvim_get_hl_id_by_name("CursorLine"),
+--         -- end_line = lnum,
+--         -- end_col = 1,
+--         hl_eol = true,
+--       })    
+--     end
+--   end
+-- end
+--
+-- vim.api.nvim_create_autocmd(
+--   { "CursorMoved", "CursorMovedI" },
+--   {
+--     pattern = "*",
+--     callback = function()
+--       highlight_relative_interval(5)
+--     end,
+--   }
+-- )
+vim.cmd([[
+  hi DiagnosticUnderlineError guifg=Red gui=underline guisp=Red
+  hi DiagnosticUnderlineWarn  gui=underline guisp=Yellow
+  hi DiagnosticUnderlineInfo  gui=underline guisp=Blue
+  hi DiagnosticUnderlineHint  gui=underline guisp=Grey
+]])
+
+-- ノーマルモードでのカーソル移動時に画面中央に揃える
+vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+  callback = function ()
+    local ft = vim.bo.filetype
+    if ft == "TelescopePrompt" or ft == "TelescopeResults" then
+      return
+    end
+    vim.cmd("normal! zz")
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "InsertCharPre" }, {
+  callback = function ()
+    vim.notify(vim.v.char .. "pressed!") 
+  end 
+}) 

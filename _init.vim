@@ -158,7 +158,7 @@ if vim.fn.has("wsl") == 1 then
 end
 
 
-require("ibl").setup()
+-- require("ibl").setup()
 
 require("flatten").setup({open = "alternate",})
 
@@ -172,13 +172,13 @@ vim.cmd([[
   highlight NormalSB guibg=none
 ]])
 
-require("mason").setup()
-require("mason-lspconfig").setup()
-require("mason-lspconfig").setup_handlers {
-  function(server_name)
-    require("lspconfig")[server_name].setup {}
-  end,
-}
+-- require("mason").setup()
+-- require("mason-lspconfig").setup()
+-- require("mason-lspconfig").setup_handlers {
+--   function(server_name)
+--     require("lspconfig")[server_name].setup {}
+--   end,
+-- }
 
 -- LSPサーバアタッチ時の処理
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -195,138 +195,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
   end,
 })
-
-require('lspconfig').clangd.setup{
-    on_attach = function(client, bufnr)
-    end
-}
-
--- CMP SETTING BEGIN
-local cmp = require'cmp'
-
-cmp.setup({
-  completion = {
-      autocomplete = false,
-  },
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
-    end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    -- ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-
- ['<C-p>'] = function()
-      if cmp.visible() then
-        cmp.select_prev_item()
-      else
-        cmp.complete()
-      end
-    end,
-
-    ['<TAB>'] = function(fallback)
-      if vim.fn['vsnip#expandable']() == 1 then
-          vim.fn['vsnip#expand']()
-      elseif vim.fn['vsnip#jumpable'](1) == 1 then
-        vim.api.nvim_feedkeys(
-          vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-next)", true, false, true),
-          "",
-          false
-        )
-      elseif cmp.visible() then
-        cmp.select_next_item()
-      else
-          local col = vim.fn.col('.') - 1
-          local line = vim.fn.getline('.')
-
-          if col > 0 and line:sub(col, col):match('%S') then
-            cmp.complete()
-          else
-            fallback()
-          end
-
-      end
-    end,
-
-    -- ['<C-p>'] = function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_prev_item()
-    --   else
-    --       cmp.complete()
-    --   end
-    -- end,
-
-
-    ['<C-n>'] = function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      else
-          cmp.complete()
-      end
-    end,
-
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' },
-  }, {
-    { name = 'buffer' },
-  }),
-  window = {
-    -- Uncomment to enable borders
-    -- completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
-  },
-})
-
--- Optional: Git completion in gitcommit filetype
---[[ 
-cmp.setup.filetype('gitcommit', {
-  sources = cmp.config.sources({
-    { name = 'git' },
-  }, {
-    { name = 'buffer' },
-  }),
-})
-require("cmp_git").setup()
-]]
-
--- Command-line completion
-
-cmp.setup.cmdline({ '/', '?' }, {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = 'buffer' }
-  }
-})
-
--- cmp.setup.cmdline(':', {
---   mapping = cmp.mapping.preset.cmdline(),
---   sources = cmp.config.sources({
---     { name = 'path' }
---   }, {
---     -- { name = 'cmdline' }
---   }),
---   matching = { disallow_symbol_nonprefix_matching = false }
--- })
-
--- LSP config
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
--- Replace or add your own LSP servers here
--- local lspconfig = require('lspconfig')
--- local servers = { 'pyright', 'tsserver', 'clangd', 'lua_ls' }
---
--- for _, lsp in ipairs(servers) do
---   lspconfig[lsp].setup {
---     capabilities = capabilities,
---   }
--- end
-
--- CMP SETTING END
-
-END
