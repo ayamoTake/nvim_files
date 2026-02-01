@@ -5,10 +5,10 @@ local mapping = {
     -- { mode = "n", from = "k", to = "gk" },
     { mode = "i", from = "uu", to = "<Esc>" },
     { mode = "i", from = "jj", to = "<Esc>" },
-    { mode = "n", from = "g<Leader>j", to = "gj" },
-    { mode = "n", from = "g<Leader>k", to = "gk" },
-    { mode = "", from = "K", to = "{" },
-    { mode = "", from = "J", to = "}" },
+    { mode = "n", from = "<C-j>", to = "gj" },
+    { mode = "n", from = "<C-k>", to = "gk" },
+    { mode = "", from = "K", to = "<Cmd>keepjumps normal! {<CR>" },
+    { mode = "", from = "J", to = "<Cmd>keepjumps normal! }<CR>" },
     { mode = "", from = "H", to = "^" },
     { mode = "", from = "L", to = "$" },
     { mode = "", from = "G", to = "G" },
@@ -23,7 +23,7 @@ local mapping = {
     -- 連続ペースト
     { mode = "x", from = "p", to = '"_xP' },
 
-    { mode = "n", from = "<CR>", to = "A<CR><Esc>0D" },
+    { mode = "n", from = "<CR>", to = 'A<CR><Esc>0"_D' },
     { mode = "n", from = "s", to = '"_s' },
     { mode = "n", from = "<Leader>a", to = 'ggVG' },
     { mode = "v", from = "<Leader>a", to = '<Esc>ggVG' },
@@ -33,7 +33,9 @@ local mapping = {
     { mode = "t", from = "jj", to = "<C-\\><C-n>" },
     { mode = "t", from = "<Esc>", to = "<C-\\><C-n>" },
     { mode = "v", from = "gu", to = 'gU' },
+    { mode = "n", from = "gu", to = 'vgU' },
     { mode = "v", from = "gd", to = 'gu' },
+    { mode = "n", from = "gd", to = 'vgu' },
     { mode = "n", from = "dp", to = 'dap' },
 
     -- count character in curent line
@@ -49,8 +51,8 @@ local mapping = {
     { mode = "v", from = "<C-j>", to = ':m \'>+1<CR>gv=gv' },
     { mode = "v", from = "<C-k>", to = ':m \'<-2<CR>gv=gv' },
 
-    { mode = "v", from = "<Leader>e", to = ":!bash<CR>" },
-    { mode = "n", from = "<Leader>e", to = ":execute 'r !bash -c ' .. shellescape(getline('.'))<CR>" },
+    { mode = "v", from = "<Leader>xx", to = ":!bash<CR>" },
+    { mode = "n", from = "<Leader>xx", to = ":execute 'r !bash -c ' . shellescape(getline('.'))<CR>" },
 
     
     { mode = "n", from = "<Leader>n", to = ":set nu<CR>" },
