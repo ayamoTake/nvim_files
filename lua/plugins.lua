@@ -1,21 +1,29 @@
 return {
 
   -- 移動系
-  { 
-      "easymotion/vim-easymotion",
-      config = function()
-        vim.keymap.set('', 'ff', '<Plug>(easymotion-overwin-w)')
-      end,
-  },
+  -- {
+  --     "easymotion/vim-easymotion",
+  --     config = function()
+  --       vim.keymap.set('', 'ff', '<Plug>(easymotion-overwin-w)')
+  --     end,
+  -- },
 
-  -- -- カラースキーム
-  { 
+  -- カラースキーム
+  {
       "Mofiqul/vscode.nvim",
       config = function()
-        vim.cmd.colorscheme "vscode"
+        -- vim.cmd.colorscheme "vscode"
       end
   },
 
+  {
+    "ellisonleao/gruvbox.nvim",
+    priority = 1000 ,
+    config = function()
+      vim.o.background = "dark" -- or "light" for light mode
+      vim.cmd([[colorscheme gruvbox]])
+    end
+  },
 
   { "numToStr/Comment.nvim", lazy = false },
 
@@ -131,6 +139,9 @@ return {
                   highlight = highlight,
               },
               scope = { enabled = false },
+              exclude = {
+                  filetypes = { "ws" },
+              },
           })
       end,
   },
@@ -243,7 +254,22 @@ return {
 
   {
     "folke/trouble.nvim",
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    opts = {
+      modes = {
+        diagnostics = {
+          -- auto_open = true,
+          auto_close = true,
+          win = {
+            type = "float",
+            relative = "cursor",
+            size = { width = 0.5, height = 0.3, },
+            position = { 3, 0 },
+            focusable = true,
+            border = "rounded",
+          },
+        },
+      },
+    },
     cmd = "Trouble",
     keys = {
       {
@@ -253,7 +279,7 @@ return {
       },
       {
         "<leader>xl",
-        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        "<cmd>Trouble diagnostics toggle filter.buf=0 <cr>",
         desc = "Buffer Diagnostics (Trouble)",
       },
     },
@@ -281,26 +307,26 @@ return {
     config = function()
       local cmp = require'cmp'
 
-      -- local timer = vim.loop.new_timer()
-      -- vim.api.nvim_create_autocmd("TextChangedI", {
-      --   callback = function()
-      --     timer:stop()
-      --     timer:start(400, 0, vim.schedule_wrap(function()
-      --       local col = vim.fn.col('.') - 1
-      --       local line = vim.fn.getline('.')
-      --       if col > 0 and line:sub(col, col):match('[%w_$]') then
-      --         cmp.complete()
-      --       end
-      --     end))
-      --   end,
-      -- })
+      local timer = vim.loop.new_timer()
+      vim.api.nvim_create_autocmd("TextChangedI", {
+        callback = function()
+          timer:stop()
+          timer:start(400, 0, vim.schedule_wrap(function()
+            local col = vim.fn.col('.') - 1
+            local line = vim.fn.getline('.')
+            if col > 0 and line:sub(col, col):match('[%w_$]') then
+              cmp.complete()
+            end
+          end))
+        end,
+      })
 
       local compare = require('cmp.config.compare')
 
       cmp.setup({
         completion = {
-          -- autocomplete = false -- { cmp.TriggerEvent.TextChanged },
-          autocomplete = { cmp.TriggerEvent.TextChanged },
+          autocomplete = false,
+          -- autocomplete = { cmp.TriggerEvent.TextChanged },
         },
         snippet = {
           expand = function(args)
@@ -333,16 +359,8 @@ return {
               fallback()
             end
           end,
-          ['<TAB>'] = function(fallback)
-            if vim.fn['vsnip#expandable']() == 1 then
-                vim.fn['vsnip#expand']()
-            elseif vim.fn['vsnip#jumpable'](1) == 1 then
-              vim.api.nvim_feedkeys(
-                vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-next)", true, false, true),
-                "",
-                false
-              )
-            elseif cmp.visible() then
+          ['<Tab>'] = function(fallback)
+            if cmp.visible() then
               cmp.select_next_item()
             else
                 local col = vim.fn.col('.') - 1
@@ -362,7 +380,7 @@ return {
             { name = 'vsnip' },
           }, {
             { name = 'buffer' },
-            { name = "path" },
+            { name = "path", option = { keyword_pattern = '[a-zA-Z0-9_./\\]+' } },
         }),
         window = {
           completion = cmp.config.window.bordered(),
@@ -386,7 +404,6 @@ return {
 
       cmp.setup.filetype("markdown", {
         sources = cmp.config.sources({
-          { name = "obsidian", keyword_length = 0 },
           { name = "buffer" },
           { name = "path" },
         }),
@@ -528,9 +545,12 @@ return {
       },
 
       files = {
-        actions = {
-          ["enter"] = tabedit_or_jump,
-          ["ctrl-g"]  = actions.file_edit,
+        no_ignore = true,
+        -- fd_opts   = [[--color = never --hidden --no-ignore --type f --type l --exclude .git]],
+        -- rg_opts   = [[--color = never --hidden --no-ignore --files -g "!.git"]],
+        actions   = {
+          ["enter"]  = tabedit_or_jump,
+          ["ctrl-g"] = actions.file_edit,
           ["ctrl-o"] = toggle_preview_and_resize, -- "toggle-preview",
         },
       },
@@ -543,12 +563,16 @@ return {
       },
 
       grep = {
-        prompt = "Grep❯ ",
-        actions = {
+        prompt    = "Grep❯ ",
+        hidden    = true,       -- disable hidden files by default
+        no_ignore = true,       -- respect ".gitignore"  by default
+        actions   = {
           ["enter"] = tabedit_or_jump,
           ["ctrl-g"]  = actions.file_edit,
         },
         winopts = {
+          height = 0.5,
+          width  = 0.9,
           preview = {
             hidden = false,
           },
@@ -570,24 +594,44 @@ return {
         },
       },
 
+      complete_path = {
+        option = { trigger_characters = false }
+      },
+
       registers = {},
       marks = {},
-      complete_path = {},
+      tabs = {},
+      manpages = {},
     })
 
-    vim.keymap.set({ "n", "v", "i" }, "<C-x><C-f>",
-      function() fzf.complete_path() end,
-      { silent = true, desc = "Fuzzy complete path" })
+    -- Watch for '[[' to trigger path completion
+    local fzf_completion_augroup = vim.api.nvim_create_augroup("FzfPathCompletion", { clear = true })
+    vim.api.nvim_create_autocmd("TextChangedI", {
+      group = fzf_completion_augroup,
+      pattern = "*",
+      callback = function()
+        local line = vim.api.nvim_get_current_line()
+        local cursor_col = vim.fn.col('.')
+        if cursor_col > 2 and line:sub(cursor_col - 2, cursor_col - 1) == '[[' then
+          -- Schedule fzf-lua to run after the current event processing
+          vim.schedule(function()
+            vim.cmd([[normal! h]])
+            require('fzf-lua').complete_path({ word_pattern = '' })
+          end)
+        end
+      end,
+    })
 
     vim.keymap.set("n", "<Leader>ll", fzf.buffers)
     vim.keymap.set("n", "<Leader><Leader>l", fzf.buffers)
     vim.keymap.set("n", "<Leader>lh", fzf.helptags)
     vim.keymap.set("n", "<Leader>lf", fzf.files)
+    vim.keymap.set("n", "<Leader>lt", fzf.tabs)
 
     vim.keymap.set({ "n", "v" }, "<Leader>lr", fzf.registers)
 
     vim.keymap.set("n", "<Leader>lj", fzf.jumps)
-    vim.keymap.set("n", "<Leader>lm", fzf.marks)
+    vim.keymap.set("n", "<Leader>lm", fzf.manpages)
 
     vim.keymap.set("n", "<Leader>lg", function()
       fzf.live_grep({ resume = false })
@@ -639,29 +683,6 @@ return {
   --                          ["<C-p>"] = require("telescope.actions").paste_register,
   --                      },
   --                  },
-  --              }
-  --          },
-  --          extensions = {
-  --             file_browser = {
-  --                   theme = "cursor",
-  --                   -- disables netrw and use telescope-file-browser in its place
-  --                   -- hijack_netrw = true,
-  --                   depth = 3,
-  --                   auto_depth = true,
-  --                   files = true,
-  --                   add_dirs = false,
-  --                   mappings = {
-  --                     ["i"] = {
-  --                       -- your custom insert mode mappings
-  --                     },
-  --                     ["n"] = {
-  --                       -- your custom normal mode mappings
-  --                     },
-  --                   },
-  --                 },
-  --              media_files = {
-  --                   filetypes = {"png", "webp", "jpg", "jpeg"},
-  --                   find_cmd = "rg",
   --              }
   --          },
   --      })
@@ -726,14 +747,6 @@ return {
   -- },
 
   {
-    "nvim-telescope/telescope-file-browser.nvim",
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-      "nvim-lua/plenary.nvim",
-    },
-  },
-
-  {
     "nvim-telescope/telescope-media-files.nvim",
     dependencies = {
         'nvim-lua/popup.nvim',
@@ -763,21 +776,27 @@ return {
   --     dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
   --     config = function ()
   --       require('render-markdown').setup({
-  --         bullet   = { enabled = false, },
-  --         checkbox = { enabled = false, },
+  --         -- bullet   = { enabled = false, },
+  --         -- checkbox = { enabled = false, },
   --       })
   --     end
   -- },
 
   -- Typst
   { 
-      "kaarmu/typst.vim",
-      ft = "typst",
-      config = function()
-        vim.g.typst_embedded_languages = {'c', 'cpp', 'python', 'rust', 'java', 'diff', }
-        vim.g.typst_pdf_viewer = "open --root .."
-        -- vim.g.typst_auto_open_quickfix = 0
-      end
+    "kaarmu/typst.vim",
+    ft = "typst",
+    config = function()
+      vim.g.typst_embedded_languages = {'c', 'cpp', 'python', 'rust', 'java', 'diff', }
+      vim.g.typst_pdf_viewer = "open --root .."
+      -- vim.g.typst_auto_open_quickfix = 0
+      -- vim.api.nvim_create_autocmd("BufWritePost", {
+      --   group = vim.api.nvim_create_augroup("TypstAutoCompile", { clear = true }),
+      --   callback = function()
+      --     vim.cmd([[TypstWatch]])
+      --   end
+      -- })
+    end
   },
 
   -- 自動括弧補完など
@@ -818,16 +837,16 @@ return {
       'nvim-treesitter/nvim-treesitter',
       build = ':TSUpdate',
       config = function()
-        -- require('nvim-treesitter.configs').setup({
-        --   ensure_installed = {
-        --     "bash", "c", "cpp", "go", "html", "javascript", "json", "lua", "markdown", "markdown_inline", "python", "query", "rust", "tsx", "typescript", "vim", "vimdoc", "yaml"
-        --   },
-        --   auto_install = true,
-        --   highlight = {
-        --     enable = true,
-        --   },
-          -- indent = { enable = true },
-        -- })
+        require('nvim-treesitter.configs').setup({
+          ensure_installed = {
+            "bash", "c", "cpp", "go", "html", "javascript", "json", "lua", "python", "query", "rust", "tsx", "typescript", "vim", "vimdoc", "yaml"
+          },
+          auto_install = true,
+          highlight = {
+            enable = true,
+          },
+          indent = { enable = true },
+        })
       end,
   },
 
@@ -877,101 +896,90 @@ return {
     end
   },
 
+
   {
-    "folke/flash.nvim",
+    "folke/noice.nvim",
     event = "VeryLazy",
-    ---@type Flash.Config
-    opts = {
-      search = {
-        mode = "fuzzy",
-        incremental = true,
-      },
-      modes = {
-        search = {
-          search = { incremental = true },
-        },
-        char = {
-          jump_labels = true
-        },
-      },
-      jump = {
-        -- add pattern to search history
-        history = true,
-        -- add pattern to search register
-        register = true,
-        -- automatically jump when there is only one match
-        autojump = false,
-      },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
     },
-    keys = {
-      { "<Leader>/", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-      { "<Leader><Leader>/", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-      { "<Leader><Leader><Leader>/", mode = { "n", "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      { "<c-/>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-    },
+    config = function()
+      require("noice").setup({
+        cmdline = {
+          format = {
+            filter = {
+              view = "split",
+              pattern = "^:%s*!",
+              icon = "$",
+              lang = "bash",
+              event = "msg_show"
+            },
+          },
+        },
+        lsp = {
+          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+          },
+        },
+        -- you can enable a preset for easier configuration
+        presets = {
+          -- bottom_search = true, -- use a classic bottom cmdline for search
+          -- command_palette = true, -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = false, -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false, -- add a border to hover docs and signature help
+        },
+        messages = {
+          view_search = false, -- disable
+        }
+      })
+    end
   },
 
-  -- {
-  --   "folke/noice.nvim",
-  --   event = "VeryLazy",
-  --   dependencies = {
-  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-  --     "MunifTanjim/nui.nvim",
-  --   },
-  --   config = function()
-  --     require("noice").setup({
-  --       cmdline = {
-  --         format = {
-  --           filter = {
-  --             view = "split",
-  --             pattern = "^:%s*!",
-  --             icon = "$",
-  --             lang = "bash",
-  --             event = "msg_show"
-  --           },
-  --         },
-  --       },
-  --       lsp = {
-  --         -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-  --         override = {
-  --           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-  --           ["vim.lsp.util.stylize_markdown"] = true,
-  --           ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-  --         },
-  --       },
-  --       -- you can enable a preset for easier configuration
-  --       presets = {
-  --         -- bottom_search = true, -- use a classic bottom cmdline for search
-  --         -- command_palette = true, -- position the cmdline and popupmenu together
-  --         long_message_to_split = true, -- long messages will be sent to a split
-  --         inc_rename = false, -- enables an input dialog for inc-rename.nvim
-  --         lsp_doc_border = false, -- add a border to hover docs and signature help
-  --       },
-  --       messages = {
-  --         view_search = false, -- disable
-  --       }
-  --     })
-  --
-  --     -- require("notify").setup({
-  --     --   background_colour = "#000000",
-  --     -- })
-  --     --
-  --     -- vim.keymap.set('n', '<Leader><Leader>n', function()
-  --     --   require('notify').dismiss { silent = true }
-  --     -- end, { desc = 'Dismiss notifications' })
-  --   end
-  -- },
+  {
+    "rcarriga/nvim-notify",
+    config = function ()
+      require("notify").setup({
+        background_colour = "#000000",
+        minimum_width = 0,
+        time_formats = {
+          notification = "",
+          messages = "",
+          notification_history = "%FT%T",
+        },
+        timeout = 10000,
+      })
+
+      vim.keymap.set('n', '<Leader><Leader>n', function()
+        require('notify').dismiss { silent = true }
+      end, { desc = 'Dismiss notifications' })
+    end
+  },
 
   {
     "obsidian-nvim/obsidian.nvim",
     ft = "markdown",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+    },
     config = function ()
+      vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {         
+        pattern = "/mnt/c/Users/ayamo/OneDrive/ドキュメント/nikki/links/*", 
+        callback = function()
+          -- vim.opt_local.conceallevel = 1
+        end,
+      })
       require("obsidian").setup({
         ui = {
-          enable = true,
-          bullets = { char = "-", hl_group = "ObsidianBullet" },
+          enable = false,
+          -- bullets = { char = "-", hl_group = "ObsidianBullet" },
         },
-        legacy_commands = false, -- this will be removed in the next major release
+        legacy_commands = false,
         workspaces = {
           {
             name = "personal",
@@ -985,43 +993,73 @@ return {
           -- create_new = false,
           order = { " ", "x", ">", },
         },
-        -- completion = {
-        --   nvim_cmp = true,
-        -- },
+        frontmatter = {
+          enabled = false,
+        },
         callbacks = {
           enter_note = function (note)
             vim.keymap.del("n", "<CR>", { buffer = true }) -- remove smart action
-            --
             local api = require "obsidian.api"
-            vim.keymap.set("n", "x", function ()
-              local line = vim.fn.getline('.')
+            -- vim.keymap.set("n", "<Leader>x", function ()
+            --   local line = vim.fn.getline('.')
+            --   local is_start_with_bullet = line:match("^%s*[-*]%s")
+            --   if api.cursor_checkbox() or (is_start_with_bullet and Obsidian.opts.checkbox.create_new) then
+            --      return "<cmd>Obsidian toggle_checkbox<cr>" 
+            --   end
+            --   return "<Leader>x"
+            -- end, {
+            --   buffer = true,
+            --   expr = true,
+            --   desc = "Toggle checkbox",
+            -- })
+
+            vim.keymap.set("n", "<CR>", function()
+              local line = vim.fn.getline(".")
               local is_start_with_bullet = line:match("^%s*[-*]%s")
-              if api.cursor_checkbox() or (is_start_with_bullet and Obsidian.opts.checkbox.create_new) then
-                 return "<cmd>Obsidian toggle_checkbox<cr>" 
-              end
-              return "x"
-            end, {
-              buffer = true,
-              expr = true,
-              desc = "Toggle checkbox",
-            })
-            vim.keymap.set("n", "<CR>", function ()
-              -- see https://github.com/obsidian-nvim/obsidian.nvim/blob/main/lua/obsidian/actions.lua
+
               if api.cursor_link() then
-                return "<cmd>Obsidian follow_link<cr>"
+                return ":Obsidian follow_link<CR>"
               elseif api.cursor_tag() then
-                return "<cmd>Obsidian tags<cr>"
+                return ":Obsidian tags<CR>"
               end
-              return 'A<CR><Esc>0"_D'
-            end, {
-              buffer = true,
-              expr = true,
-              desc = "my smart action on obsidian",
-            })
+
+              -- vim.api.nvim_put({""}, "l", true, true)  -- 改行挿入
+              return "A<CR><Esc>"
+              -- vim.cmd([[normal! 0"_D]])                   -- 現在行を削除
+            end, { buffer = true, expr = true, silent = true, }) 
           end
         }
       })
-      vim.opt_local.conceallevel = 2
     end
-  }
+  },
+    
+  {
+    'mcauley-penney/visual-whitespace.nvim',
+    -- event = "ModeChanged *:[vV\22]", -- optionally, lazy load on entering visual mode
+    opts = {
+      enabled = true,
+      -- highlight = { link = "Visual", default = true },
+      match_types = {
+        space = true,
+        tab = true,
+        nbsp = true,
+        lead = false,
+        trail = false,
+      },
+      list_chars = {
+        space = "·",
+        tab = "↦",
+        nbsp = "␣",
+        lead = "‹",
+        trail = "›",
+      },
+      fileformat_chars = {
+        unix = "↲",
+        mac = "↲",
+        dos = "↙",
+      },
+      ignore = { filetypes = {}, buftypes = {} },
+    },
+  },
+
 }

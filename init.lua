@@ -26,8 +26,6 @@ vim.api.nvim_create_autocmd("FocusLost", {
     end,
 })
 
-require("mapping")
-
 if vim.fn.has("wsl") == 1 then
     if vim.fn.executable("xsel") == 0 then
         print("xsel not found, clipboard integration won't work")
@@ -54,7 +52,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     local set = vim.keymap.set
     set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { buffer = true })
     set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { buffer = true })
-    set("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { buffer = true })    
+    set("n", "gK", "<cmd>lua vim.lsp.buf.hover()<CR>", { buffer = true })
+    -- set("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", { buffer = true })    
     set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", { buffer = true })
     set("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", { buffer = true })
     set("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", { buffer = true })
@@ -70,13 +69,13 @@ vim.diagnostic.config({
 
 -- vim.api.nvim_set_keymap('n', '<leader>r', ':w<CR>:belowright split term://g++ % -o %:r && ./%:r<CR>', { noremap = true, silent = true })
 
-vim.opt.cursorline = true
+-- vim.opt.cursorline = true
 -- vim.opt.cursorcolumn = true
 
 -- 検索
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
-vim.opt.ignorecase = false
+vim.opt.ignorecase = true
 
 -- タブ
 vim.opt.expandtab = true
@@ -128,12 +127,17 @@ require("lazy").setup({
     defaults = { lazy = false, },
     spec = {
         { import = "plugins" },
+        { import = "flash/flash" },
+        { import = "pomo/pomo" },
     },
 })
+
+require("mapping")
 
 -- 透明化 
 vim.cmd([[
   highlight Normal       ctermbg=none guibg=none
+  highlight NormalFloat  ctermbg=none guibg=none
   highlight NormalNC     ctermbg=none guibg=none
   highlight NormalSB     ctermbg=none guibg=none
   highlight NonText      ctermbg=none guibg=none
@@ -141,7 +145,7 @@ vim.cmd([[
   highlight LineNrAbove  ctermbg=none guibg=none
   highlight LineNrBelow  ctermbg=none guibg=none
   highlight SignColumn   ctermbg=none guibg=none
-  highlight CursorLine cterm=underline gui=underline guibg=none
+  highlight CursorLine   cterm=underline gui=underline guibg=none
   highlight CursorLineNr ctermbg=none guibg=none
   highlight link CursorLineNr LineNr
 ]])
@@ -181,3 +185,22 @@ if vim.fn.has("wsl") == 1 then
     end
   end
 end
+
+vim.keymap.set("i", "<CR>", function()
+  vim.schedule(function()
+    -- まだバッファが有効なら実行
+    if vim.api.nvim_get_current_buf() ~= 0 then
+      vim.cmd("normal! zz")
+    end
+  end)
+  return "<CR>"
+end, {
+  expr = true,
+  noremap = false,
+})
+
+vim.filetype.add({
+  extension = {
+    ws = "ws",
+  },
+})

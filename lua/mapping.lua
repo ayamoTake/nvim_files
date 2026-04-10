@@ -23,7 +23,8 @@ local mapping = {
     -- 連続ペースト
     { mode = "x", from = "p", to = '"_xP' },
 
-    { mode = "n", from = "<CR>", to = 'A<CR><Esc>0"_D' },
+    -- { mode = "n", from = "<CR>", to = 'A<CR><Esc>0"_D' },
+    { mode = "n", from = "<CR>", to = 'A<CR><Esc>' },
     { mode = "n", from = "s", to = '"_s' },
     { mode = "n", from = "<Leader>a", to = 'ggVG' },
     { mode = "v", from = "<Leader>a", to = '<Esc>ggVG' },
@@ -60,6 +61,13 @@ local mapping = {
 
     {mode = "n", from = "<Leader>xj", to = "]d" },
     {mode = "n", from = "<Leader>xk", to = "[d" },
+
+    {mode = "n", from = "t", to = "gt" },
+    {mode = "n", from = "T", to = "gT" },
+
+    {mode = "n", from = "<Leader>j", to = "J" },
+    {mode = "n", from = "<Leader>d", to = "V:!datef<CR>" },
+
 }
 
 for _, m in pairs(mapping) do
@@ -73,7 +81,9 @@ end, { noremap = true, silent = true })
 
 vim.keymap.set("n", "<Leader>n", function()
   vim.wo.number = not vim.wo.number
+  vim.wo.relativenumber = not vim.wo.relativenumber
   print("number:", vim.wo.number and "on" or "off")
 end)
+
 
 vim.api.nvim_create_user_command("Q", "q!", {})
