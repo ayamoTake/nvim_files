@@ -204,3 +204,5 @@ vim.filetype.add({
     ws = "ws",
   },
 })
+
+require("myxxd")
